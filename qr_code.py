@@ -1,6 +1,6 @@
 #PROJET QRCODE DONT LE BUT EST DE DECODER UN QRCODE#
 
-#version non officiel
+
 
 
 # importation de librairies
@@ -88,6 +88,71 @@ def verify(mat) :
                                 rotate(mat)
                         if k != mat[-8+i][-8+j] :
                             verifie = False
+
+
+
+
+def verify_horizontale(mat):
+    "vérifie si la ligne entre les symboles est bien présente"
+    verify = 0
+    if mat[7] ==  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0]:  #compare la ligne 7 à la ligne qui doit etre présente renvoie vrai ou faux
+        verify = True
+    else:
+        verify = False
+    return verify
+
+
+def verify_verticale(mat):
+    "vérifie si la ligne entre les symboles est bien présente"
+    global mat_temporaire
+    verify = 0
+
+    mat_temporaire = []
+    mat_temporaire.append(mat[8][7])
+    mat_temporaire.append(mat[9][7])
+    mat_temporaire.append(mat[10][7])
+    mat_temporaire.append(mat[11][7])
+    mat_temporaire.append(mat[12][7])
+    mat_temporaire.append(mat[13][7])   #il faut ajouter les éléments de la colonne mat dans une autre liste
+    
+    if mat_temporaire ==  [0,0,0,0,0]:  #compare la colonne 7 à la ligne qui doit etre présente renvoie vrai ou false
+        verify = True
+    else:
+        verify = False
+    return verify
+
+l =[]
+
+def lecture_bits (mat): # pas nécesaire
+    global l
+
+    for i in range(nbrCol(mat)):
+        for j in range(nbrLig(mat)):
+            l = [mat[i][j],mat[i][j+1],mat[i][j+2],mat[i][j+3],mat[i][j+4],mat[i][j+5],mat[i][j+6]]
+            return l
+
+
+
+
+def decode(l): #decode hamming
+    b1 = l[0]
+    b2 = l[1]
+    b3 = l[2]
+    b4 = l[3]
+    p1 = l[4]
+    p2 = l[5]
+    p3 = l[6]
+
+    if ( b1 + b2 + b3) % 2 == p1 and ( b1 + b2 + b4) % 2 == p2 and ( b2 + b3 + b4) % 2 == p3:
+        return [b1,b2,b3,b4,p1,p2,p3]
+    else:
+         p1 = ( b1 + b2 + b3) % 2
+         p2 = ( b1 + b2 + b4) % 2 
+         p3 = ( b2 + b3 + b4) % 2
+         print("erreur corriger")
+
+
+         return [b1,b2,b3,b4,p1,p2,p3]
 
 #création fenetre
 
