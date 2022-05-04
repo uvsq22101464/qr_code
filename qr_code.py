@@ -5,8 +5,9 @@
 
 # importation de librairies
 import tkinter as tk
-
-
+import PIL as pil
+from PIL import Image
+from PIL import ImageTk 
 
 #constantes
 HAUTEUR= 500
@@ -33,6 +34,7 @@ def saving(matPix, filename):#sauvegarde l'image contenue dans matpix dans le fi
 
 def loading(filename):#charge le fichier image filename et renvoie une matrice de 0 et de 1 qui représente 
 					  #l'image en noir et blanc
+    global mat
     toLoad=pil.Image.open(filename)
     mat=[[0]*toLoad.size[0] for k in range(toLoad.size[1])]
     mat_modif=[[0]*toLoad.size[0] for k in range(toLoad.size[1])]
@@ -73,18 +75,16 @@ def rotate(mat):
 
 def verify(mat) :
     """vérifie si la matrice est dans le bon sens"""
-    cpt = 0
     verifie = True
     while verifie == True :
         for i in range(len(symbole)) :
-                for j in range(len(symbole)) :
-                    for k in symbole[i][j] :
-                        if k == mat[-8+i][-8+j] :
-                            cpt += 1                # le cpt sert a compter si le symbole est égale a la où il doit être (je met 32 pour vérifier les 4 lignes et prendre moins de temps)
-                            if cpt == 32 :           # si on retrouve le symbole en bas a droite on rotate
-                                rotate(mat)
-                        if k != mat[-8+i][-8+j] :
-                            verifie = False
+            for j in range(len(symbole)) :
+                for k in symbole[i] :
+                    if k == mat[17+i][17+j] :
+                        verifie = True
+                    else :
+                        rotate(mat)
+                        verifie = False
 
 
 
