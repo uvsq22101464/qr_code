@@ -5,9 +5,6 @@
 
 # importation de librairies
 import tkinter as tk
-import PIL as pil
-from PIL import Image
-from PIL import ImageTk 
 
 
 
@@ -132,7 +129,7 @@ def lecture_bits (mat): # pas nécesaire
             return l
 
 
-
+l = [1,0,1,0,0,1,0]
 
 def decode(l): #decode hamming
     b1 = l[0]
@@ -143,32 +140,45 @@ def decode(l): #decode hamming
     p2 = l[5]
     p3 = l[6]
 
-    if ( b1 + b2 + b3) % 2 == p1 and ( b1 + b2 + b4) % 2 == p2 and ( b2 + b3 + b4) % 2 == p3:
+    if ( b1 + b2 + b4) % 2 == p1 and ( b1 + b3 + b4) % 2 == p2 and ( b2 + b3 + b4) % 2 == p3:
+        print("OK")
         return [b1,b2,b3,b4,p1,p2,p3]
     else:
-         p1 = ( b1 + b2 + b3) % 2
-         p2 = ( b1 + b2 + b4) % 2 
-         p3 = ( b2 + b3 + b4) % 2
-         print("erreur corriger")
+        if p1 != ( b1 + b2 + b4) % 2 and p2 == ( b1 + b3 + b4) % 2 and p3 == ( b2 + b3 + b4) % 2:
+            p1 = ( b1 + b2 + b4) % 2
+        
+        if p1 == ( b1 + b2 + b4) % 2 and p2 != ( b1 + b3 + b4) % 2 and p3 == ( b2 + b3 + b4) % 2:
+            p2 = ( b1 + b3 + b4) % 2
+        
+        if p1 == ( b1 + b2 + b4) % 2 and p2 == ( b1 + b3 + b4) % 2 and p3 != ( b2 + b3 + b4) % 2:
+            p3 = ( b2 + b3 + b4) % 2
 
 
-         return [b1,b2,b3,b4,p1,p2,p3]
+        if p1 != ( b1 + b2 + b4) % 2 and p2 != ( b1 + b3 + b4) % 2:
+             if b1 == 0:
+                 b1 = 1
+             else :
+                b1 = 1
+        if p1 != ( b1 + b2 + b4) % 2 and p3 != ( b2 + b3 + b4) % 2:
+             if b2 == 0:
+                 b2 = 1
+             else :
+                b2 = 1
+        
+        if p2 != ( b1 + b2 + b4) % 2 and p3 != ( b2 + b3 + b4) % 2:
+             if b3 == 0:
+                 b3 = 1
+             else :
+                b3 = 1
+        
+        if 1 != ( b1 + b2 + b4) % 2 and p2 != ( b1 + b2 + b4) % 2 and p3 != ( b2 + b3 + b4) % 2:
+             if b4 == 0:
+                 b4 = 1
+             else :
+                b4 = 1
+             
+             
+        print("erreur corriger")
 
-#création fenetre
 
-###############################     pourquoi utiliser une interface ? on a pas besoin (on peut le faire en bonus mais apres afficher le résultat dedans c'est un peu plus chiant)
-
-fenetre = tk.Tk()
-
-canvas = tk.Canvas(fenetre, bg="black", height=HAUTEUR, width=LARGEUR)
-
-bouton_charger = tk.Button(fenetre,text="charger",bg="blue",command=loading)
-
-#positionnment widgets
-canvas.grid()
-bouton_charger.grid()
-
-
-
-#lancement de la boucle
-fenetre.mainloop()
+        return [b1,b2,b3,b4,p1,p2,p3]
