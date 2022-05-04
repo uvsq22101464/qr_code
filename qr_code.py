@@ -158,24 +158,24 @@ def decode(l): #decode hamming
              if b1 == 0:
                  b1 = 1
              else :
-                b1 = 1
+                b1 = 0
         if p1 != ( b1 + b2 + b4) % 2 and p3 != ( b2 + b3 + b4) % 2:
              if b2 == 0:
                  b2 = 1
              else :
-                b2 = 1
+                b2 = 0
         
         if p2 != ( b1 + b2 + b4) % 2 and p3 != ( b2 + b3 + b4) % 2:
              if b3 == 0:
                  b3 = 1
              else :
-                b3 = 1
+                b3 = 0
         
         if 1 != ( b1 + b2 + b4) % 2 and p2 != ( b1 + b2 + b4) % 2 and p3 != ( b2 + b3 + b4) % 2:
              if b4 == 0:
                  b4 = 1
              else :
-                b4 = 1
+                b4 = 0
              
              
         print("erreur corriger")
@@ -193,3 +193,6 @@ def liste_info(matrice) :
                 liste_bits[y].append(matrice[-j-y*2][-i])
         cpt += 1
     return liste_bits
+
+
+
