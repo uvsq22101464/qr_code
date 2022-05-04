@@ -182,3 +182,14 @@ def decode(l): #decode hamming
 
 
         return [b1,b2,b3,b4,p1,p2,p3]
+
+def liste_info(matrice) :
+    cpt = 0
+    liste_bits = []
+    for y in range(len(matrice)//2) :
+        liste_bits.append([])
+        for i in range(1, 8) :
+            for j in range(1, 3) :
+                liste_bits[y].append(matrice[-j-y*2][-i])
+        cpt += 1
+    return liste_bits
