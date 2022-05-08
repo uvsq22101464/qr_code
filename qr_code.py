@@ -263,13 +263,13 @@ def liste_info(matrice) :
             for k in range(2) :
                 liste_bits.append([])
                 if k == 1 :
-                    for i in range(1, 8) :
+                    for i in range(18, 25) :
                         for j in range(1, 3) :
-                            liste_bits[-1].append(matrice[-j-y*2][-i])
+                            liste_bits[-1].append(matrice[-j-y*2][i])
                 else :
-                    for i in range(8, 15) :
+                    for i in range(11, 18) :
                         for j in range(1, 3) :
-                            liste_bits[-1].append(matrice[-j-y*2][-i])
+                            liste_bits[-1].append(matrice[-j-y*2][i])
     return liste_bits
 
 
@@ -314,6 +314,6 @@ def decoder():
 
 
 loading("D:/Travail/programation/projet/Exemples/qr_code_ssfiltre_ascii.png")
-liste_info(mat)
+print(liste_info(mat))
 #for i in range(len(mat)) :
  #   print(mat[i])
