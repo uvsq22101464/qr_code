@@ -123,20 +123,8 @@ def verify_verticale(mat):
         verify = False
     return verify
 
-l =[]
 
-def lecture_bits (mat): # pas nécesaire
-    global l
-
-    for i in range(nbrCol(mat)):
-        for j in range(nbrLig(mat)):
-            l = [mat[i][j],mat[i][j+1],mat[i][j+2],mat[i][j+3],mat[i][j+4],mat[i][j+5],mat[i][j+6]]
-            return l
-
-
-l = [1,0,1,0,0,1,0]
-
-def correcteur1(l): #decode hamming
+def correcteur1(l): #correcteur hamming
     b1 = l[0]
     b2 = l[1]
     b3 = l[2]
@@ -146,7 +134,7 @@ def correcteur1(l): #decode hamming
     p3 = l[6]
 
     if ( b1 + b2 + b4) % 2 == p1 and ( b1 + b3 + b4) % 2 == p2 and ( b2 + b3 + b4) % 2 == p3:
-        print("OK")
+
         return [b1,b2,b3,b4,p1,p2,p3]
     else:
         if p1 != ( b1 + b2 + b4) % 2 and p2 == ( b1 + b3 + b4) % 2 and p3 == ( b2 + b3 + b4) % 2:
@@ -190,7 +178,7 @@ def correcteur1(l): #decode hamming
     
 
 
-def correcteur2(l): #decode hamming
+def correcteur2(l): #correcteur hamming
     b1 = l[7]
     b2 = l[8]
     b3 = l[9]
@@ -200,7 +188,6 @@ def correcteur2(l): #decode hamming
     p3 = l[13]
 
     if ( b1 + b2 + b4) % 2 == p1 and ( b1 + b3 + b4) % 2 == p2 and ( b2 + b3 + b4) % 2 == p3:
-        print("OK")
         return [b1,b2,b3,b4,p1,p2,p3]
     else:
         if p1 != ( b1 + b2 + b4) % 2 and p2 == ( b1 + b3 + b4) % 2 and p3 == ( b2 + b3 + b4) % 2:
@@ -273,47 +260,56 @@ def liste_info(matrice) :
     return liste_bits
 
 
+def nbr_bloc_decoder(mat):
+    global res
+    "La fonction permet de connaitre le nombre de bloc qu'il faudra décoder"
+    liste_nbr_bloc = []
+    liste_nbr_bloc.append(mat[13][0])
+    liste_nbr_bloc.append(mat[14][0])
+    liste_nbr_bloc.append(mat[15][0])
+    liste_nbr_bloc.append(mat[16][0])
+    liste_nbr_bloc.append(mat[17][0])
+    #convertir en base10
+    res = 2**0 * liste_nbr_bloc[4] + 2**1 * liste_nbr_bloc[3] + 2**2 * liste_nbr_bloc[2] + 2**3 * liste_nbr_bloc[1] + 2**3 * liste_nbr_bloc[0]
+    return("le nombre de bloc à decoder est de",res)
 
-def decoder():
+
+def decoder(mat):
+    "la fonction permet de decoder les blocs de 14 bits"
     global liste_bits
-    liste_info = []
+    liste_dinfo = []
     liste_fin = []
-    condition = 0
-     
-    if mat[24][8] == 0:
-        while  condition == 15:
-            for i in  range(0,16):
-                condition +=1
-                liste_info.append(liste_bits[i])
-                correcteur1(liste_info)
-                correcteur2(liste_info)
-                #liste_fin.append(chr(l[0]+l[1]+l[2]+l[3]+l[7]+l[8]+l[9]+l[10]))
-                #return liste_fin.reverse()
-                liste_info.remove(liste_info[0])
-        
-        return liste_fin.reverse()
-
-
-           
-    
+    liste_info(mat)
     if mat[24][8] == 1:
-         while  condition == 15:
-        
-            for i in  range(0,16):
-                condition +=1
-                liste_info.append(liste_bits[i])
-                correcteur1(liste_info)
-                correcteur2(liste_info)
-                
-                liste_fin.append(chr(l[0]+l[1]+l[2]+l[3]+l[7]+l[8]+l[9]+l[10]))
-                liste_info.remove(liste_info[0])
+        for i in  range(0,res): #remplace 14 par "res" le nbr de blocs
+            liste_dinfo.append(liste_bits[i])
+            correcteur1(liste_dinfo)
+            correcteur2(liste_dinfo)
+            print(str(liste_dinfo[0][0]))
+            carac = str(liste_dinfo[0][0]) + str(liste_dinfo[0][1]) + str(liste_dinfo[0][2]) + str(liste_dinfo[0][3]) \
+                 + str(liste_dinfo[0][7]) + str(liste_dinfo[0][8]) + str(liste_dinfo[0][9]) + str(liste_dinfo[0][10])
+            cpt, cpt1 = 0, 0
+            for i in range(len(carac)) :
+                if int(carac[i]) == 0 :
+                    cpt += 0
+                else :
+                    cpt += 2**(len(carac)-1-i)
+            print(cpt)
+            liste_fin.append(chr(cpt))
+            liste_dinfo.remove(liste_dinfo[0])
 
-         return liste_fin.reverse()
-            
-        
+        print(liste_fin)
+
+        return liste_fin.reverse()
 
 
 loading("D:/Travail/programation/projet/Exemples/qr_code_ssfiltre_ascii.png")
 print(liste_info(mat))
 #for i in range(len(mat)) :
  #   print(mat[i])
+verify(mat)
+verify_horizontale(mat)
+verify_verticale(mat)
+nbr_bloc_decoder(mat)
+decoder(mat)
+            
