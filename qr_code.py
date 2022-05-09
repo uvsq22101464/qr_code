@@ -125,13 +125,13 @@ def verify_verticale(mat):
 
 
 def correcteur1(l): #correcteur hamming
-    b1 = l[0]
-    b2 = l[1]
-    b3 = l[2]
-    b4 = l[3]
-    p1 = l[4]
-    p2 = l[5]
-    p3 = l[6]
+    b1 = l[0][0]
+    b2 = l[0][1]
+    b3 = l[0][2]
+    b4 = l[0][3]
+    p1 = l[0][4]
+    p2 = l[0][5]
+    p3 = l[0][6]
 
     if ( b1 + b2 + b4) % 2 == p1 and ( b1 + b3 + b4) % 2 == p2 and ( b2 + b3 + b4) % 2 == p3:
 
@@ -179,13 +179,13 @@ def correcteur1(l): #correcteur hamming
 
 
 def correcteur2(l): #correcteur hamming
-    b1 = l[7]
-    b2 = l[8]
-    b3 = l[9]
-    b4 = l[10]
-    p1 = l[11]
-    p2 = l[12]
-    p3 = l[13]
+    b1 = l[0][7]
+    b2 = l[0][8]
+    b3 = l[0][9]
+    b4 = l[0][10]
+    p1 = l[0][11]
+    p2 = l[0][12]
+    p3 = l[0][13]
 
     if ( b1 + b2 + b4) % 2 == p1 and ( b1 + b3 + b4) % 2 == p2 and ( b2 + b3 + b4) % 2 == p3:
         return [b1,b2,b3,b4,p1,p2,p3]
@@ -234,7 +234,7 @@ def liste_info(matrice) :
     """retourne une liste de liste de bits taille 14 de chaque bloc lu dans le bon sens"""
     global liste_bits
     liste_bits = []
-    for y in range(7) :
+    for y in range(12) :
         if y % 2 ==  0 :
             for k in range(2) :
                 liste_bits.append([])
@@ -270,7 +270,7 @@ def nbr_bloc_decoder(mat):
     liste_nbr_bloc.append(mat[16][0])
     liste_nbr_bloc.append(mat[17][0])
     #convertir en base10
-    res = 2**0 * liste_nbr_bloc[4] + 2**1 * liste_nbr_bloc[3] + 2**2 * liste_nbr_bloc[2] + 2**3 * liste_nbr_bloc[1] + 2**3 * liste_nbr_bloc[0]
+    res = 2**0 * liste_nbr_bloc[4] + 2**1 * liste_nbr_bloc[3] + 2**2 * liste_nbr_bloc[2] + 2**3 * liste_nbr_bloc[1] + 2**4 * liste_nbr_bloc[0]
     return("le nombre de bloc à decoder est de",res)
 
 
@@ -278,38 +278,76 @@ def decoder(mat):
     "la fonction permet de decoder les blocs de 14 bits"
     global liste_bits
     liste_dinfo = []
-    liste_fin = []
+    mot = ""
     liste_info(mat)
     if mat[24][8] == 1:
         for i in  range(0,res): #remplace 14 par "res" le nbr de blocs
             liste_dinfo.append(liste_bits[i])
             correcteur1(liste_dinfo)
             correcteur2(liste_dinfo)
-            print(str(liste_dinfo[0][0]))
             carac = str(liste_dinfo[0][0]) + str(liste_dinfo[0][1]) + str(liste_dinfo[0][2]) + str(liste_dinfo[0][3]) \
                  + str(liste_dinfo[0][7]) + str(liste_dinfo[0][8]) + str(liste_dinfo[0][9]) + str(liste_dinfo[0][10])
-            cpt, cpt1 = 0, 0
+            cpt = 0
             for i in range(len(carac)) :
                 if int(carac[i]) == 0 :
                     cpt += 0
                 else :
                     cpt += 2**(len(carac)-1-i)
-            print(cpt)
-            liste_fin.append(chr(cpt))
+            mot += str(chr(cpt))
             liste_dinfo.remove(liste_dinfo[0])
+        return  "le résultat du qr code est :", mot
+    elif mat[24][8] == 0:
+        for i in range(0, res):
+            liste_dinfo.append(liste_bits[i])
+            correcteur1(liste_dinfo)
+            correcteur2(liste_dinfo)
+            carac1 = str(liste_dinfo[0][0]) + str(liste_dinfo[0][1]) + str(liste_dinfo[0][2]) + str(liste_dinfo[0][3])
+            carac2 = str(liste_dinfo[0][7]) + str(liste_dinfo[0][8]) + str(liste_dinfo[0][9]) + str(liste_dinfo[0][10])
+            cpt = 0
+            for i in range(4) :
+                if int(carac1[i]) == 0 :
+                    cpt += 0
+                else :
+                    cpt += 2**(4-1-i)
+            mot += str(cpt)
+            mot += " "
+            cpt = 0
+            for i in range(4) :
+                if int(carac2[i]) == 0 :
+                    cpt += 0
+                else :
+                    cpt += 2**(4-1-i)
+            mot += str(cpt)
+            mot += " "
+            liste_dinfo.remove(liste_dinfo[0])
+            trad_hexa(mot)
+        return "le résultat du qr code est :", nombre
 
-        print(liste_fin)
-
-        return liste_fin.reverse()
-
+def trad_hexa(nb) :
+    global nombre
+    nombre = ""
+    for i in nb.split() :
+        if int(i) == 10 :
+            nombre += "A"
+        if int(i) == 11 :
+            nombre += "B"
+        if int(i) == 12 :
+            nombre += "C"
+        if int(i) == 13 :
+            nombre += "D"
+        if int(i) == 14 :
+            nombre += "E"
+        if int(i) == 15 :
+            nombre += "F"
+        elif int(i) < 10:
+            nombre += str(i)
+    return nombre
+        
 
 loading("D:/Travail/programation/projet/Exemples/qr_code_ssfiltre_ascii.png")
-print(liste_info(mat))
-#for i in range(len(mat)) :
- #   print(mat[i])
 verify(mat)
 verify_horizontale(mat)
 verify_verticale(mat)
-nbr_bloc_decoder(mat)
-decoder(mat)
-            
+print(nbr_bloc_decoder(mat))
+liste_info(mat)
+print(decoder(mat))
