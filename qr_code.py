@@ -124,7 +124,7 @@ def verify_verticale(mat):
     return verify
 
 
-def correcteur2(l): #correcteur hamming
+def correcteur(l): #correcteur hamming
     b1 = l[0]
     b2 = l[1]
     b3 = l[2]
@@ -271,8 +271,8 @@ def decoder(mat):
     if mat[24][8] == 1:
         for i in  range(0,res): #remplace 14 par "res" le nbr de blocs
             liste_dinfo.append(liste_bits[i])
-            correcteur1(liste_dinfo)
-            correcteur2(liste_dinfo)
+            
+            correcteur(liste_dinfo)
             print(str(liste_dinfo[0][0]))
             carac = str(liste_dinfo[0][0]) + str(liste_dinfo[0][1]) + str(liste_dinfo[0][2]) + str(liste_dinfo[0][3]) \
                  + str(liste_dinfo[0][7]) + str(liste_dinfo[0][8]) + str(liste_dinfo[0][9]) + str(liste_dinfo[0][10])
