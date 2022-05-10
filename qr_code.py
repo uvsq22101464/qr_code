@@ -124,24 +124,18 @@ def verify_verticale(mat):
     return verify
 
 
-def correcteur(l): #correcteur hamming
-    b1 = l[0]
-    b2 = l[1]
-    b3 = l[2]
-    b4 = l[3]
-    p1 = l[4]
-    p2 = l[5]
-    p3 = l[6]
-    b5 = l[7]
-    b6 = l[8]
-    b7 = l[9]
-    b8 = l[10]
-    p4 = l[11]
-    p5 = l[12]
-    p6 = l[13]
+def correcteur1(l): #correcteur hamming
+    b1 = l[0][0]
+    b2 = l[0][1]
+    b3 = l[0][2]
+    b4 = l[0][3]
+    p1 = l[0][4]
+    p2 = l[0][5]
+    p3 = l[0][6]
 
-    if ( b1 + b2 + b4) % 2 == p1 and ( b1 + b3 + b4) % 2 == p2 and ( b2 + b3 + b4) % 2 == p3 and ( b5 + b6 + b8) % 2 == p4 and ( b5 + b7 + b8) % 2 == p5 and ( b6 + b7 + b8) % 2 == p6 :
-         return[b1,b2,b3,b4,p1,p2,p3,b5,b6,b7,b8,p4,p5,p6]
+    if ( b1 + b2 + b4) % 2 == p1 and ( b1 + b3 + b4) % 2 == p2 and ( b2 + b3 + b4) % 2 == p3:
+
+        return [b1,b2,b3,b4,p1,p2,p3]
     else:
         if p1 != ( b1 + b2 + b4) % 2 and p2 == ( b1 + b3 + b4) % 2 and p3 == ( b2 + b3 + b4) % 2:
             p1 = ( b1 + b2 + b4) % 2
@@ -170,59 +164,77 @@ def correcteur(l): #correcteur hamming
              else :
                 b3 = 0
         
-        if p1 != ( b1 + b2 + b4) % 2 and p2 != ( b1 + b2 + b4) % 2 and p3 != ( b2 + b3 + b4) % 2:
+        if 1 != ( b1 + b2 + b4) % 2 and p2 != ( b1 + b2 + b4) % 2 and p3 != ( b2 + b3 + b4) % 2:
              if b4 == 0:
                  b4 = 1
              else :
                 b4 = 0
-        
-        
-        if p4 != ( b1 + b2 + b4) % 2 and p5 == ( b1 + b3 + b4) % 2 and p6 == ( b2 + b3 + b4) % 2:
-            p4 = ( b1 + b2 + b4) % 2
-        
-        if p4 == ( b1 + b2 + b4) % 2 and p5 != ( b1 + b3 + b4) % 2 and p6  == ( b2 + b3 + b4) % 2:
-            p5 = ( b1 + b3 + b4) % 2
-        
-        if p4 == ( b1 + b2 + b4) % 2 and p5 == ( b1 + b3 + b4) % 2 and p6  != ( b2 + b3 + b4) % 2:
-            p6 = ( b2 + b3 + b4) % 2
+             
+             
+        print("erreur corriger")
 
 
-        if p4 != ( b1 + b2 + b4) % 2 and p5 != ( b1 + b3 + b4) % 2:
-             if b5 == 0:
-                 b5 = 1
+        return [b1,b2,b3,b4,p1,p2,p3]
+    
+
+
+def correcteur2(l): #correcteur hamming
+    b1 = l[0][7]
+    b2 = l[0][8]
+    b3 = l[0][9]
+    b4 = l[0][10]
+    p1 = l[0][11]
+    p2 = l[0][12]
+    p3 = l[0][13]
+
+    if ( b1 + b2 + b4) % 2 == p1 and ( b1 + b3 + b4) % 2 == p2 and ( b2 + b3 + b4) % 2 == p3:
+        return [b1,b2,b3,b4,p1,p2,p3]
+    else:
+        if p1 != ( b1 + b2 + b4) % 2 and p2 == ( b1 + b3 + b4) % 2 and p3 == ( b2 + b3 + b4) % 2:
+            p1 = ( b1 + b2 + b4) % 2
+        
+        if p1 == ( b1 + b2 + b4) % 2 and p2 != ( b1 + b3 + b4) % 2 and p3 == ( b2 + b3 + b4) % 2:
+            p2 = ( b1 + b3 + b4) % 2
+        
+        if p1 == ( b1 + b2 + b4) % 2 and p2 == ( b1 + b3 + b4) % 2 and p3 != ( b2 + b3 + b4) % 2:
+            p3 = ( b2 + b3 + b4) % 2
+
+
+        if p1 != ( b1 + b2 + b4) % 2 and p2 != ( b1 + b3 + b4) % 2:
+             if b1 == 0:
+                 b1 = 1
              else :
                 b1 = 0
-        if p4 != ( b1 + b2 + b4) % 2 and p6  != ( b2 + b3 + b4) % 2:
-             if b6 == 0:
-                 b6 = 1
+        if p1 != ( b1 + b2 + b4) % 2 and p3 != ( b2 + b3 + b4) % 2:
+             if b2 == 0:
+                 b2 = 1
              else :
-                b6 = 0
+                b2 = 0
         
-        if p4 != ( b1 + b2 + b4) % 2 and p6  != ( b2 + b3 + b4) % 2:
-             if b7 == 0:
-                 b7 = 1
+        if p2 != ( b1 + b2 + b4) % 2 and p3 != ( b2 + b3 + b4) % 2:
+             if b3 == 0:
+                 b3 = 1
              else :
-                b7 = 0
+                b3 = 0
         
-        if p4 != ( b1 + b2 + b4) % 2 and p5 != ( b1 + b2 + b4) % 2 and p6  != ( b2 + b3 + b4) % 2:
-             if b8 == 0:
-                 b8 = 1
+        if 1 != ( b1 + b2 + b4) % 2 and p2 != ( b1 + b2 + b4) % 2 and p3 != ( b2 + b3 + b4) % 2:
+             if b4 == 0:
+                 b4 = 1
              else :
-                b8 = 0
+                b4 = 0
              
              
-        
+        print("erreur corriger")
 
 
-        return [b1,b2,b3,b4,p1,p2,p3,b5,b6,b7,b8,p4,p5,p6]
-
+        return [b1,b2,b3,b4,p1,p2,p3]
 
 
 def liste_info(matrice) :
     """retourne une liste de liste de bits taille 14 de chaque bloc lu dans le bon sens"""
     global liste_bits
     liste_bits = []
-    for y in range(7) :
+    for y in range(12) :
         if y % 2 ==  0 :
             for k in range(2) :
                 liste_bits.append([])
@@ -266,38 +278,76 @@ def decoder(mat):
     "la fonction permet de decoder les blocs de 14 bits"
     global liste_bits
     liste_dinfo = []
-    liste_fin = []
+    mot = ""
     liste_info(mat)
     if mat[24][8] == 1:
         for i in  range(0,res): #remplace 14 par "res" le nbr de blocs
             liste_dinfo.append(liste_bits[i])
-            
-            correcteur(liste_dinfo)
-            print(str(liste_dinfo[0][0]))
+            correcteur1(liste_dinfo)
+            correcteur2(liste_dinfo)
             carac = str(liste_dinfo[0][0]) + str(liste_dinfo[0][1]) + str(liste_dinfo[0][2]) + str(liste_dinfo[0][3]) \
                  + str(liste_dinfo[0][7]) + str(liste_dinfo[0][8]) + str(liste_dinfo[0][9]) + str(liste_dinfo[0][10])
-            cpt, cpt1 = 0, 0
+            cpt = 0
             for i in range(len(carac)) :
                 if int(carac[i]) == 0 :
                     cpt += 0
                 else :
                     cpt += 2**(len(carac)-1-i)
-            print(cpt)
-            liste_fin.append(chr(cpt))
+            mot += str(chr(cpt))
             liste_dinfo.remove(liste_dinfo[0])
+        return  "le résultat du qr code est :", mot
+    elif mat[24][8] == 0:
+        for i in range(0, res):
+            liste_dinfo.append(liste_bits[i])
+            correcteur1(liste_dinfo)
+            correcteur2(liste_dinfo)
+            carac1 = str(liste_dinfo[0][0]) + str(liste_dinfo[0][1]) + str(liste_dinfo[0][2]) + str(liste_dinfo[0][3])
+            carac2 = str(liste_dinfo[0][7]) + str(liste_dinfo[0][8]) + str(liste_dinfo[0][9]) + str(liste_dinfo[0][10])
+            cpt = 0
+            for i in range(4) :
+                if int(carac1[i]) == 0 :
+                    cpt += 0
+                else :
+                    cpt += 2**(4-1-i)
+            mot += str(cpt)
+            mot += " "
+            cpt = 0
+            for i in range(4) :
+                if int(carac2[i]) == 0 :
+                    cpt += 0
+                else :
+                    cpt += 2**(4-1-i)
+            mot += str(cpt)
+            mot += " "
+            liste_dinfo.remove(liste_dinfo[0])
+            trad_hexa(mot)
+        return "le résultat du qr code est :", nombre
 
-        print(liste_fin)
+def trad_hexa(nb) :
+    global nombre
+    nombre = ""
+    for i in nb.split() :
+        if int(i) == 10 :
+            nombre += "A"
+        if int(i) == 11 :
+            nombre += "B"
+        if int(i) == 12 :
+            nombre += "C"
+        if int(i) == 13 :
+            nombre += "D"
+        if int(i) == 14 :
+            nombre += "E"
+        if int(i) == 15 :
+            nombre += "F"
+        elif int(i) < 10:
+            nombre += str(i)
+    return nombre
+        
 
-        return liste_fin.reverse()
-
-
-loading("Macintosh_HD/Utilisateurs/sambarbosa/DM/Exemples/qr_code_ssfiltre_ascii.png")
-print(liste_info(mat))
-#for i in range(len(mat)) :
- #   print(mat[i])
+loading("D:/Travail/programation/projet/Exemples/qr_code_ssfiltre_num.png")
 verify(mat)
 verify_horizontale(mat)
 verify_verticale(mat)
-nbr_bloc_decoder(mat)
-decoder(mat)
-            
+print(nbr_bloc_decoder(mat))
+liste_info(mat)
+print(decoder(mat))
