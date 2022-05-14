@@ -82,28 +82,32 @@ def verify(mat):
 
 
 def verify_horizontale(mat):
-    """vérifie si la ligne entre les symboles est bien présente"""
+    """vérifie si la ligne horizontale entre les symboles est bien présente"""
     verify = 0
-    if mat[7] == [0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0]:
-        # compare la ligne 7 à la ligne qui doit etre présente renvoie vrai ou faux
+    if mat[6] == [0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0]:
+        # compare la ligne 6 à la ligne qui doit etre présente renvoie vrai ou faux
         verify = True
+        print("il y a bien la ligne horizontale")
     else:
         verify = False
+        print("il n'y a pas la ligne horizontale")
     return verify
 
 
 def verify_verticale(mat):
-    """vérifie si la ligne entre les symboles est bien présente"""
+    """vérifie si la ligne verticale entre les symboles est bien présente"""
     global mat_temporaire
     verify = 0
     mat_temporaire = []
     for i in range(7, 18):
-        mat_temporaire.append(mat[i][7])  # il faut ajouter les éléments de la colonne mat dans une autre liste
+        mat_temporaire.append(mat[i][6])  # il faut ajouter les éléments de la colonne mat dans une autre liste
 
     if mat_temporaire == [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1]:  # compare la colonne 7 à la ligne qui doit etre présente renvoie true ou false
         verify = True
+        print("il y a bien la ligne verticale")
     else:
         verify = False
+        print("il n'y a pas la ligne verticale")
     return verify
 
 
@@ -333,8 +337,8 @@ loading(filename=filedialog.askopenfile(mode='rb', title='Choose a file'))
 # ligne prise dans le TP4_photoshopCorrection IN 202
 
 verify(mat)
-verify_horizontale(mat)
-verify_verticale(mat)
+print(verify_horizontale(mat))
+print(verify_verticale(mat))
 nbr_bloc_decoder(mat)
 filtre(mat)
 liste_info(mat)
