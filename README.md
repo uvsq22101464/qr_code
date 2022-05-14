@@ -4,7 +4,7 @@
 
 ## AUTEURS
 - Sam BARBOSA
-- EThan MACHE
+- Ethan MACHE
 
 ### Fonctionnement du programme
 
