@@ -2,6 +2,7 @@
 
 # MACHE Ethan
 # BARBOSA Sam
+# https://github.com/uvsq22101464/qr_code
 
 # importation de librairies
 
