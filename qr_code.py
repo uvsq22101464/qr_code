@@ -56,59 +56,60 @@ symbole = [[0, 0, 0, 0, 0, 0, 0, 1],
 def rotate(mat):
     """effectue une rotation a l'image afin de la remettre à l'endroit"""
     mat_tempo = []
-    for i in range(25):
+    for i in range(len(mat)):
         tempo = []
-        for j in range(25 - 1, -1, -1):  # j va de -1 a -25
+        for j in range(len(mat) - 1, -1, -1):  # j va de -1 a -25
             tempo.append(mat[j][i])  # on recopie la colonne i sur la ligne i
         mat_tempo.append(tempo)  # on l'ajoute dans une matrice temporaire
-    for i in range(25):
-        for j in range(25):
+    for i in range(len(mat)):
+        for j in range(len(mat)):
             mat[i][j] = mat_tempo[i][j]  # on réécrit la matrice
+    print("rotation")
     return mat
 
 
 def verify(mat):
     """vérifie si la matrice est dans le bon sens"""
-    verifie = True
-    while verifie:
-        for i in range(len(symbole)):
-            for j in range(len(symbole)):
-                for k in symbole[i]:
-                    if k == mat[17+i][17+j]:
-                        verifie = True
-                    else:
-                        rotate(mat)
-                        verifie = False
+    verifie = False
+    while verifie is False:
+        for i in range(len(symbole)-1):
+            for j in range(len(symbole[i])-1):
+                if symbole[i][j] == mat[i][j] and symbole[i][j] == mat[i][18+j] and symbole[i][j] == mat[18+i][j]:
+                    verifie = True
+                else:
+                    rotate(mat)
+    print("symboles présents dans le bon sens")
 
 
 def verify_horizontale(mat):
     """vérifie si la ligne horizontale entre les symboles est bien présente"""
-    verify = 0
+    global verify_ho
+    verify_ho = 0
     if mat[6] == [0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0]:
         # compare la ligne 6 à la ligne qui doit etre présente renvoie vrai ou faux
-        verify = True
+        verify_ho = True
         print("il y a bien la ligne horizontale")
     else:
-        verify = False
+        verify_ho = False
         print("il n'y a pas la ligne horizontale")
-    return verify
+    return verify_ho
 
 
 def verify_verticale(mat):
     """vérifie si la ligne verticale entre les symboles est bien présente"""
-    global mat_temporaire
-    verify = 0
+    global mat_temporaire, verify_ve
+    verify_ve = 0
     mat_temporaire = []
     for i in range(7, 18):
         mat_temporaire.append(mat[i][6])  # il faut ajouter les éléments de la colonne mat dans une autre liste
 
     if mat_temporaire == [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1]:  # compare la colonne 7 à la ligne qui doit etre présente renvoie true ou false
-        verify = True
+        verify_ve = True
         print("il y a bien la ligne verticale")
     else:
-        verify = False
+        verify_ve = False
         print("il n'y a pas la ligne verticale")
-    return verify
+    return verify_ve
 
 
 def correcteur(l):
@@ -337,9 +338,12 @@ loading(filename=filedialog.askopenfile(mode='rb', title='Choose a file'))
 # ligne prise dans le TP4_photoshopCorrection IN 202
 
 verify(mat)
-print(verify_horizontale(mat))
-print(verify_verticale(mat))
-nbr_bloc_decoder(mat)
-filtre(mat)
-liste_info(mat)
-print(decoder(mat))
+verify_horizontale(mat)
+verify_verticale(mat)
+if verify_ho and verify_ve:
+    nbr_bloc_decoder(mat)
+    filtre(mat)
+    liste_info(mat)
+    print(decoder(mat))
+else:
+    print("décryptage impossible")
