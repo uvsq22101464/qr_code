@@ -1,13 +1,15 @@
-#PROJET QRCODE DONT LE BUT EST DE DECODER UN QRCODE#
+# PROJET QRCODE DONT LE BUT EST DE DECODER UN QRCODE
 
-
-
+# MACHE Ethan
+# BARBOSA Sam
 
 # importation de librairies
+
 import tkinter as tk
 import PIL as pil
 from PIL import Image
-from PIL import ImageTk 
+from PIL import ImageTk
+from tkinter import filedialog
 
 #fonctions
 
@@ -17,9 +19,8 @@ def nbrCol(matrice):
 def nbrLig(matrice):
     return len(matrice)
 
-
-def saving(matPix, filename):#sauvegarde l'image contenue dans matpix dans le fichier filename
-							 #utiliser une extension png pour que la fonction fonctionne sans perte d'information
+def saving(matPix, filename):  # sauvegarde l'image contenue dans matpix dans le fichier filename
+							   # utiliser une extension png pour que la fonction fonctionne sans perte d'information
     toSave=pil.Image.new(mode = "1", size = (nbrCol(matPix),nbrLig(matPix)))
     for i in range(nbrLig(matPix)):
         for j in range(nbrCol(matPix)):
@@ -35,10 +36,8 @@ def loading(filename):#charge le fichier image filename et renvoie une matrice d
     for i in range(toLoad.size[1]):
         for j in range(toLoad.size[0]):
             mat[i][j]= 0 if toLoad.getpixel((j,i)) == 0 else 1
-    return mat, mat_modif
+    return mat
 
-
-#matrice représentatnt le symbol carré entouré ligne blanche entouré ligne noir, le 0 représente le noir et le 1 le blanc, c'est peut être a interchanger je sais pas trop faut tester et je peux pas atm
 symbole = [[0, 0, 0, 0, 0, 0, 0, 1], 
            [0, 1, 1, 1, 1, 1, 0, 1], 
            [0, 1, 0, 0, 0, 1, 0, 1], 
@@ -47,25 +46,19 @@ symbole = [[0, 0, 0, 0, 0, 0, 0, 1],
            [0, 1, 1, 1, 1, 1, 0, 1], 
            [0, 0, 0, 0, 0, 0, 0, 1],
            [1, 1, 1, 1, 1, 1, 1, 1]]
-
-
-
-
     
 def rotate(mat):
     """effectue une rotation a l'image afin de la remettre à l'endroit"""
     mat_tempo = []
     for i in range(25):
         tempo = []
-        for j in range(25-1,-1,-1):     # j va de -1 a -25
-            tempo.append(mat[j][i])     # on recopie la colonne i sur la ligne i
-        mat_tempo.append(tempo)         # on l'ajoute dans une matrice temporaire
+        for j in range(25-1,-1,-1):  # j va de -1 a -25
+            tempo.append(mat[j][i])  # on recopie la colonne i sur la ligne i
+        mat_tempo.append(tempo)  # on l'ajoute dans une matrice temporaire
     for i in range(25):
         for j in range(25):
-            mat[i][j] = mat_tempo[i][j] # on réécrit la matrice 
+            mat[i][j] = mat_tempo[i][j]  # on réécrit la matrice 
     return mat
-
-            
 
 def verify(mat) :
     """vérifie si la matrice est dans le bon sens"""
@@ -80,11 +73,8 @@ def verify(mat) :
                         rotate(mat)
                         verifie = False
 
-
-
-
 def verify_horizontale(mat):
-    "vérifie si la ligne entre les symboles est bien présente"
+    """vérifie si la ligne entre les symboles est bien présente"""
     verify = 0
     if mat[7] ==  [0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0]:  #compare la ligne 7 à la ligne qui doit etre présente renvoie vrai ou faux
         verify = True
@@ -92,61 +82,33 @@ def verify_horizontale(mat):
         verify = False
     return verify
 
-
 def verify_verticale(mat):
-    "vérifie si la ligne entre les symboles est bien présente"
+    """vérifie si la ligne entre les symboles est bien présente"""
     global mat_temporaire
     verify = 0
-
     mat_temporaire = []
-    mat_temporaire.append(mat[7][7])
-    mat_temporaire.append(mat[8][7])
-    mat_temporaire.append(mat[9][7])
-    mat_temporaire.append(mat[10][7])
-    mat_temporaire.append(mat[11][7])
-    mat_temporaire.append(mat[12][7])
-    mat_temporaire.append(mat[13][7])
-    mat_temporaire.append(mat[14][7])
-    mat_temporaire.append(mat[15][7])
-    mat_temporaire.append(mat[16][7])
-    mat_temporaire.append(mat[17][7])   #il faut ajouter les éléments de la colonne mat dans une autre liste
-    
-    if mat_temporaire ==  [1,0,1,0,1,0,1,0,1,0,1]:  #compare la colonne 7 à la ligne qui doit etre présente renvoie vrai ou false
+    for i in range(7, 18) :
+        mat_temporaire.append(mat[i][7])  # il faut ajouter les éléments de la colonne mat dans une autre liste
+
+    if mat_temporaire ==  [1,0,1,0,1,0,1,0,1,0,1]:  #compare la colonne 7 à la ligne qui doit etre présente renvoie true ou false
         verify = True
     else:
         verify = False
     return verify
 
-
-def correcteur(l): #correcteur hamming
-    b1 = l[0][0]
-    b2 = l[0][1]
-    b3 = l[0][2]
-    b4 = l[0][3]
-    p1 = l[0][4]
-    p2 = l[0][5]
-    p3 = l[0][6]
-    b5 = l[0][7]
-    b6 = l[0][8]
-    b7 = l[0][9]
-    b8 = l[0][10]
-    p4 = l[0][11]
-    p5 = l[0][12]
-    p6 = l[0][13]
-
+def correcteur(l):
+    """Cherche une erreur et corrige l'erreur si il y en a une"""
+    b1, b2, b3, b4, b5, b6, b7, b8 = l[0][0], l[0][1], l[0][2], l[0][3], l[0][7], l[0][8], l[0][9], l[0][10]
+    p1, p2, p3, p4, p5, p6 = l[0][4], l[0][5], l[0][6], l[0][11], l[0][12], l[0][13]
     if ( b1 + b2 + b4) % 2 == p1 and ( b1 + b3 + b4) % 2 == p2 and ( b2 + b3 + b4) % 2 == p3 and ( b5 + b6 + b8) % 2 == p4 and ( b5 + b7 + b8) % 2 == p5 and ( b6 + b7 + b8) % 2 == p6 :
          return[b1,b2,b3,b4,p1,p2,p3,b5,b6,b7,b8,p4,p5,p6]
     else:
         if p1 != ( b1 + b2 + b4) % 2 and p2 == ( b1 + b3 + b4) % 2 and p3 == ( b2 + b3 + b4) % 2:
             p1 = ( b1 + b2 + b4) % 2
-        
         if p1 == ( b1 + b2 + b4) % 2 and p2 != ( b1 + b3 + b4) % 2 and p3 == ( b2 + b3 + b4) % 2:
             p2 = ( b1 + b3 + b4) % 2
-        
         if p1 == ( b1 + b2 + b4) % 2 and p2 == ( b1 + b3 + b4) % 2 and p3 != ( b2 + b3 + b4) % 2:
             p3 = ( b2 + b3 + b4) % 2
-
-
         if p1 != ( b1 + b2 + b4) % 2 and p2 != ( b1 + b3 + b4) % 2 and p3 == ( b2 + b3 + b4) % 2:
              if b1 == 0:
                  b1 = 1
@@ -157,30 +119,22 @@ def correcteur(l): #correcteur hamming
                  b2 = 1
              else :
                 b2 = 0
-        
         if p1 == ( b1 + b2 + b4) % 2 and p2 != ( b1 + b3 + b4) % 2 and p3 != ( b2 + b3 + b4) % 2:
              if b3 == 0:
                  b3 = 1
              else :
                 b3 = 0
-        
         if p1 != ( b1 + b2 + b4) % 2 and p2 != ( b1 + b3 + b4) % 2 and p3 != ( b2 + b3 + b4) % 2:
              if b4 == 0:
                  b4 = 1
              else :
                 b4 = 0
-        
-        
         if p4 != ( b5 + b6 + b8) % 2 and p5 == ( b5 + b7 + b8) % 2 and p6 == ( b6 + b7 + b8) % 2:
             p4 = ( b5 + b6 + b8) % 2
-        
         if p4 == ( b5 + b6 + b8) % 2 and p5 != ( b5 + b7 + b8) % 2 and p6  == ( b6 + b7 + b8) % 2:
             p5 = ( b5 + b7 + b8) % 2
-        
         if p4 == ( b5 + b6 + b8) % 2 and p5 == ( b5 + b7 + b8) % 2 and p6  != ( b6 + b7 + b8) % 2:
             p6 = ( b6 + b7 + b8) % 2
-
-
         if p4 != ( b5 + b6 + b8) % 2 and p5 != ( b5 + b7 + b8) % 2 and p6  == (b6 + b7 + b8) % 2:
              if b5 == 0:
                  b5 = 1
@@ -191,30 +145,19 @@ def correcteur(l): #correcteur hamming
                  b6 = 1
              else :
                 b6 = 0
-        
         if p4 == ( b5 + b6 + b8) % 2 and p5 != ( b5 + b7 + b8) % 2 and p6  != ( b6 + b7 + b8) % 2:
              if b7 == 0:
                  b7 = 1
              else :
                 b7 = 0
-        
         if p4 != ( b5 + b6 + b8) % 2 and p5 != (b5 + b7 + b8) % 2 and p6  != (b6 + b7 + b8) % 2:
              if b8 == 0:
                  b8 = 1
              else :
                 b8 = 0
-             
-             
-        
-
         print("erreur corriger")
         return[b1,b2,b3,b4,p1,p2,p3,b5,b6,b7,b8,p4,p5,p6]
     
-
-
-
-
-
 def liste_info(matrice) :
     """retourne une liste de liste de bits taille 14 de chaque bloc lu dans le bon sens"""
     global liste_bits
@@ -244,30 +187,27 @@ def liste_info(matrice) :
                             liste_bits[-1].append(matrice[-j-y*2][i])
     return liste_bits
 
-
 def nbr_bloc_decoder(mat):
+    """La fonction permet de connaitre le nombre de bloc qu'il faudra décoder"""
     global res
-    "La fonction permet de connaitre le nombre de bloc qu'il faudra décoder"
     liste_nbr_bloc = []
     liste_nbr_bloc.append(mat[13][0])
     liste_nbr_bloc.append(mat[14][0])
     liste_nbr_bloc.append(mat[15][0])
     liste_nbr_bloc.append(mat[16][0])
     liste_nbr_bloc.append(mat[17][0])
-    #convertir en base10
+    # convertir en base10
     res = 2**0 * liste_nbr_bloc[4] + 2**1 * liste_nbr_bloc[3] + 2**2 * liste_nbr_bloc[2] + 2**3 * liste_nbr_bloc[1] + 2**4 * liste_nbr_bloc[0]
-    return("le nombre de bloc à decoder est de",res)
-
+    return res
 
 def decoder(mat):
-    "la fonction permet de decoder les blocs de 14 bits"
+    """la fonction permet de decoder les blocs de 14 bits"""
     global liste_bits
     liste_dinfo = []
     liste_corriger = []
     mot = ""
-    liste_info(mat)
     if mat[24][8] == 1:
-        for i in  range(0,res): #remplace 14 par "res" le nbr de blocs
+        for i in  range(res):
             liste_dinfo.append(liste_bits[i])
             liste_corriger.append(correcteur(liste_dinfo))
             carac = str(liste_corriger[0][0]) + str(liste_corriger[0][1]) + str(liste_corriger[0][2]) + str(liste_corriger[0][3]) \
@@ -281,7 +221,7 @@ def decoder(mat):
             mot += str(chr(cpt))
             liste_dinfo.remove(liste_dinfo[0])
             liste_corriger.remove(liste_corriger[0])
-        return  "le résultat du qr code est :", mot
+        return  "le résultat du qr code est : " + mot
     elif mat[24][8] == 0:
         for i in range(0, res):
             liste_dinfo.append(liste_bits[i])
@@ -307,9 +247,10 @@ def decoder(mat):
             liste_dinfo.remove(liste_dinfo[0])
             liste_corriger.remove(liste_corriger[0])
             trad_hexa(mot)
-        return "le résultat du qr code est :", nombre
+        return "le résultat du qr code est : " + nombre
 
 def trad_hexa(nb) :
+    """traduit le nombre en base hexadécimale"""
     global nombre
     nombre = ""
     for i in nb.split() :
@@ -328,13 +269,59 @@ def trad_hexa(nb) :
         elif int(i) < 10:
             nombre += str(i)
     return nombre
-        
 
-#loading("D:/Travail/programation/projet/Exemples/qr_code_ssfiltre_num.png")
-loading("/Users/sambarbosa/Pictures/Exemples/qr_code_ssfiltre_ascii_corrupted.png")
+def filtre(mat) :
+    """applique le filtre à la matrice du qr code"""
+    global liste_bits
+    if mat[22][8] == 0 and mat[23][8] == 0 :
+        return mat
+    elif mat[22][8] == 0 and mat[23][8] == 1 :  # damier
+        print("filtre damier")
+        noir = False
+        for i in range(25):
+            for j in range(25):
+                if noir == False :
+                    mat[i][j] = mat[i][j]
+                else :
+                    mat[i][j] = 1^mat[i][j]
+                noir = not noir
+        return mat
+    elif mat[22][8] == 1 and mat[23][8] == 0 :  # lignes horizontales
+        print("filtre ligne horizontale")
+        noir = True
+        for i in range(25):
+            for j in range(25):
+                if noir == True :
+                    mat[i][j] = mat[i][j]
+                else :
+                    mat[i][j] = 1^mat[i][j]
+            noir = not noir
+        return mat
+    elif mat[22][8] == 1 and mat[23][8] == 1 :  # lignes verticales
+        print("filtre ligne verticale")
+        noir = True
+        for i in range(25):
+            for j in range(25):
+                if j % 2 == 1 :
+                    noir = False
+                else :
+                    noir = True
+                if noir == True :
+                    mat[i][j] = mat[i][j]
+                else :
+                    mat[i][j] = 1^mat[i][j]
+        return mat
+
+#loading("D:/Travail/programation/projet/Exemples/qr_code_ssfiltre_ascii_corrupted.png")
+#loading("/Users/sambarbosa/Pictures/Exemples/qr_code_ssfiltre_ascii_corrupted.png")
+#loading("C:/programation/Exemples/qr_code_damier_ascii.png")
+
+loading(filename= filedialog.askopenfile(mode='rb', title='Choose a file'))  # ligne prise dans le TP4_photoshopCorrection IN 202
+
 verify(mat)
 verify_horizontale(mat)
 verify_verticale(mat)
-print(nbr_bloc_decoder(mat))
+nbr_bloc_decoder(mat)
+filtre(mat)
 liste_info(mat)
 print(decoder(mat))
